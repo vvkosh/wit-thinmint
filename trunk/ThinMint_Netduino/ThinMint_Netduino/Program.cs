@@ -9,13 +9,19 @@ namespace ThinMint_Netduino
 {
     public class Program
     {
+        private static OutputPort _led = new OutputPort(Pins.ONBOARD_LED, false);
+
         public static void Main()
         {
-            OutputPort led = new OutputPort(Pins.ONBOARD_LED, false);
+            MagneticSensor.Launch();
+            PressureSensor.Launch();
+
             while (true)
             {
                 Thread.Sleep(1000);
-                led.Write(!led.Read());
+                _led.Write(true);
+                Thread.Sleep(1000);
+                _led.Write(false);
             }
         }
 
