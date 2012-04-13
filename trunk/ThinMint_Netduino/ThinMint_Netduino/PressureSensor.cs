@@ -11,6 +11,12 @@ namespace ThinMint_Netduino
     {
         private static OutputPort _input;
         private static OutputPort _output;
+        private static float _inputVoltage = 0;
+        private static float _outputVoltage = 0;
+        private static float _psi = 0;
+
+        private const float _pMin = 0;
+        private const float _pMax = 100;
 
         /// <summary>
         /// Pin reading input from the PSI sensor.
@@ -30,6 +36,15 @@ namespace ThinMint_Netduino
             set { PressureSensor._output = value; }
         }
 
+        /// <summary>
+        /// PSI reading of the sensor.
+        /// </summary>
+        public static float PSI
+        {
+            get { return PressureSensor._psi; }
+            set { PressureSensor._psi = value; }
+        }
+
         public static void Launch()
         {
             _input = new OutputPort(Pins.GPIO_PIN_D0, false);
@@ -41,16 +56,14 @@ namespace ThinMint_Netduino
         {
             while (true)
             {
-                Debug.Print("Pressure: " + _input.Read());
+                CalculateVoltage();
+                Debug.Print("Pressure: " + PSI);
             }
         }
 
-
-        private static float CalculateVoltage(float inputVoltage)
+        private static void CalculateVoltage()
         {
-            float outputVoltage;
-            outputVoltage = 0; // EQUATION GOES HERE
-            return outputVoltage;
+            PSI = (0.80f / (_pMax - _pMin)) * (_inputVoltage - _pMin) + 0.10f;
         }
     }
 }
