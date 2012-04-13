@@ -13,7 +13,7 @@ namespace ThinMint_Netduino
 
         public static void Main()
         {
-            MagneticSensor.Launch();
+            PhotoSensor.Launch();
             PressureSensor.Launch();
 
             while (true)
