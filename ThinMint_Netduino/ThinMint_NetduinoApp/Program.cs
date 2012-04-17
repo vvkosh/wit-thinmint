@@ -15,9 +15,9 @@ namespace ThinMint_Netduino
     {
         public static void Main()
         {
-            PhotoSensor.Launch();
-            PressureSensor.Launch();
-            UsbHidDeviceListener.Launch();
+            //PhotoSensor.Launch();
+            //PressureSensor.Launch();
+            //UsbHidDeviceListener.Launch();
         }
     }
 }
