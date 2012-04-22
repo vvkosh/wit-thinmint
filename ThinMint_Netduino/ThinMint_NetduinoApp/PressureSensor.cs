@@ -90,17 +90,16 @@ namespace ThinMint_Netduino
                 //cs = 0;
                 Thread.Sleep(100);
                 byte[] WriteBuffer = new byte[1];
-                byte[] ReadBuffer = new byte[1];
-                // Send a dummy byte to receive the contents
-                WriteBuffer[0] = 0x00;
-                int byte_1 = spi.write(0x00);
-                int byte_2 = spi.write(0x00);
-                int byte_3 = spi.write(0x00);
-                int byte_4 = spi.write(0x00);
-
+                byte[] ReadBuffer = new byte[4];
+                WriteBuffer[0] = 255;
+                //int byte_1 = SPIBus.WriteRead(ReadBuffer,ReadBuffer);
+                //int byte_2 = spi.write(0x00);
+                //int byte_3 = spi.write(0x00);
+                //int byte_4 = spi.write(0x00);
+                SPIBus.WriteRead(ReadBuffer, ReadBuffer);
                 //float temp = byte_3 << 3;
                 //temp = ((temp / 2047) * 200) - 50;
-                float psi = byte_1 << 8 | byte_2;
+                float psi = ReadBuffer[0] << 8 | ReadBuffer[1];
                 //psi = byte_1|byte_2; 
                 psi = (psi / 13108) - (1743 / 13108);
 
