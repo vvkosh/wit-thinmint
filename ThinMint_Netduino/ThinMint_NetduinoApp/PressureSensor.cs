@@ -4,7 +4,7 @@ using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.Netduino;
 using System.Threading;
 using SecretLabs.NETMF.Hardware;
-
+using System.Diagnostics;
 namespace ThinMint_Netduino
 {
     class PressureSensor
@@ -21,14 +21,14 @@ namespace ThinMint_Netduino
         private const float _outMin = 1632;
 
 
-        SPI.Configuration Device1 = new SPI.Configuration(
+        private static SPI.Configuration Device1 = new SPI.Configuration(
             Pins.GPIO_PIN_D10, // SS-pin
             false,             // SS-pin active state
             0,                 // The setup time for the SS port
             0,                 // The hold time for the SS port
             true,              // The idle state of the clock
             false,             // The sampling clock edge
-            1000,              // The SPI clock rate in KHz
+            8000,              // The SPI clock rate in KHz
             SPI_Devices.SPI1   // The used SPI bus (refers to a MOSI MISO and SCLK pinset)
         );
 
@@ -80,31 +80,35 @@ namespace ThinMint_Netduino
         {
             //PSI = (0.80f / (_pMax - _pMin)) * (_inputVoltage - _pMin) + 0.10f;
             // Setup the spi for 8 bit data with a 800KHz clock rate 
-            spi.format(8, 0);
-            spi.frequency(800000);
+            SPI SPIBus = new SPI(Device1);
+           // spi.format(8, 0);
+           // spi.frequency(800000);
 
-            while (1)
+            while (true)
             {
                 // Select the device by seting chip select low 
-                cs = 0;
-                wait(0.1);
-                // Send a dummy byte to receive the contents 
+                //cs = 0;
+                Thread.Sleep(100);
+                byte[] WriteBuffer = new byte[1];
+                byte[] ReadBuffer = new byte[1];
+                // Send a dummy byte to receive the contents
+                WriteBuffer[0] = 0x00;
                 int byte_1 = spi.write(0x00);
                 int byte_2 = spi.write(0x00);
                 int byte_3 = spi.write(0x00);
                 int byte_4 = spi.write(0x00);
 
-                float temp = byte_3 << 3;
-                temp = ((temp / 2047) * 200) - 50;
+                //float temp = byte_3 << 3;
+                //temp = ((temp / 2047) * 200) - 50;
                 float psi = byte_1 << 8 | byte_2;
                 //psi = byte_1|byte_2; 
-                psi = (Device1 / 13108) - (1743 / 13108);
+                psi = (psi / 13108) - (1743 / 13108);
 
-                pc.printf("Byte 1 = %X; Byte 2 = %X; Byte 3 = %X; Byte 4 = %X; PSI =  %.4f; TEMP = %.2f\r", byte_1, byte_2, byte_3, byte_4, psi, temp);
+                //Debug.Print("Byte 1 = %X; Byte 2 = %X; Byte 3 = %X; Byte 4 = %X; PSI =  %.4f; TEMP = %.2f\r", byte_1, byte_2, byte_3, byte_4, psi, temp);
 
                 // Deselect the device 
-                cs = 1;
-                wait(0.5);
+                //cs = 1;
+                Thread.Sleep(5000);
             }
         }
     }
