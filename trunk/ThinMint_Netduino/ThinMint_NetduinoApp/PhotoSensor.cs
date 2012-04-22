@@ -9,7 +9,7 @@ namespace ThinMint_Netduino
 {
     class PhotoSensor
     {
-        private static OutputPort _input;
+        private static InputPort _input;
         private static int _rotations = 0;
         private static float _rpm = 0;
         private static Boolean _state = false;
@@ -18,7 +18,7 @@ namespace ThinMint_Netduino
         /// <summary>
         /// Pin reading input from the magnetic sensor.
         /// </summary>
-        public static OutputPort Input
+        public static InputPort Input
         {
             get { return PhotoSensor._input; }
             set { PhotoSensor._input = value; }
@@ -43,7 +43,7 @@ namespace ThinMint_Netduino
         public static void Launch()
         {
             timer.Reset();
-            _input = new OutputPort(Pins.GPIO_PIN_D11, false);
+            _input = new InputPort(Pins.GPIO_PIN_D9, false, Port.ResistorMode.Disabled);
             Thread photoThread = (new Thread(new ThreadStart(Listen)));
             photoThread.Start();
         }
