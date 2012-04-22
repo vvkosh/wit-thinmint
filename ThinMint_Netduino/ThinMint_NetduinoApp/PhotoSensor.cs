@@ -4,7 +4,7 @@ using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.Netduino;
 using System.Threading;
 using SecretLabs.NETMF.Hardware;
-
+using System.Diagnostics;
 namespace ThinMint_Netduino
 {
     class PhotoSensor
@@ -14,7 +14,7 @@ namespace ThinMint_Netduino
         private static float _rpm = 0;
         private static Boolean _state = false;
         private static Boolean _prevState = false;
-
+        private static Stopwatch timer = Stopwatch.StartNew();
         /// <summary>
         /// Pin reading input from the magnetic sensor.
         /// </summary>
@@ -42,6 +42,7 @@ namespace ThinMint_Netduino
 
         public static void Launch()
         {
+            timer.Reset();
             _input = new OutputPort(Pins.GPIO_PIN_D11, false);
             Thread photoThread = (new Thread(new ThreadStart(Listen)));
             photoThread.Start();
@@ -49,22 +50,24 @@ namespace ThinMint_Netduino
 
         private static void Listen()
         {
+            timer.Start();
             while (true)
             {
                 _state = _input.Read();
                 if (_state && !_prevState)
                 {
                     _rotations++;
-                    CalculateRPM();
+                    CalculateRPM(timer.ElapsedMilliseconds);
                 }
                // Debug.Print("Photo: " + _state + " . . . RPM: " + _rpm);
                 _prevState = _state;
             }
+            timer.Stop();
         }
 
-        private static void CalculateRPM()
+        private static void CalculateRPM(long elapsedMilliseconds)
         {
-            _rpm = _rotations;
+            _rpm = _rotations / elapsedMilliseconds;
         }
     }
 }
