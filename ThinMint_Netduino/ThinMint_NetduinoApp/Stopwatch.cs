@@ -1,7 +1,7 @@
 using System;
 using Microsoft.SPOT;
 
-namespace System.Diagnostics
+namespace ThinMint_Netduino
 {
     class Stopwatch
     {

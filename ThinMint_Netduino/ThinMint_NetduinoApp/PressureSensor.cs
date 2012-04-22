@@ -9,17 +9,7 @@ namespace ThinMint_Netduino
 {
     class PressureSensor
     {
-        private static OutputPort _input;
-        private static OutputPort _output;
-        private static float _inputVoltage = 0;
-        private static float _outputVoltage = 0;
         private static float _psi = 0;
-
-        private const float _pMin = 0;
-        private const float _pMax = 100;
-        private const float _outMax = 2104;
-        private const float _outMin = 1632;
-
 
         private static SPI.Configuration Device1 = new SPI.Configuration(
             Pins.GPIO_PIN_D10, // SS-pin
@@ -33,24 +23,6 @@ namespace ThinMint_Netduino
         );
 
         /// <summary>
-        /// Pin reading input from the PSI sensor.
-        /// </summary>
-        public static OutputPort Input
-        {
-            get { return PressureSensor._input; }
-            set { PressureSensor._input = value; }
-        }
-
-        /// <summary>
-        /// Pin providing power to the PSI sensor.
-        /// </summary>
-        public static OutputPort Output
-        {
-            get { return PressureSensor._output; }
-            set { PressureSensor._output = value; }
-        }
-
-        /// <summary>
         /// PSI reading of the sensor.
         /// </summary>
         public static float PSI
@@ -61,19 +33,8 @@ namespace ThinMint_Netduino
 
         public static void Launch()
         {
-            _input = new OutputPort(Pins.GPIO_PIN_D12, false);
-            _output = new OutputPort(Pins.GPIO_PIN_D13, false);
-            Thread pressureThread = (new Thread(new ThreadStart(Listen)));
+            Thread pressureThread = (new Thread(new ThreadStart(CalculateVoltage)));
             pressureThread.Start();
-        }
-
-        private static void Listen()
-        {
-            while (true)
-            {
-                CalculateVoltage();
-              //  Debug.Print("Pressure: " + PSI);
-            }
         }
 
         private static void CalculateVoltage()
@@ -103,18 +64,15 @@ namespace ThinMint_Netduino
                 //psi = byte_1|byte_2; 
                 psi = (psi / 13108) - (1743 / 13108);
 
-                //Debug.Print("Byte 1 = %X; Byte 2 = %X; Byte 3 = %X; Byte 4 = %X; PSI =  %.4f; TEMP = %.2f\r", byte_1, byte_2, byte_3, byte_4, psi, temp);
+                Debug.Print("Byte 1 = " + ReadBuffer[0] + "; Byte 2 = " + ReadBuffer[1] + "; PSI =  " + psi);
 
                 // Deselect the device 
                 //cs = 1;
-                Thread.Sleep(5000);
+                Thread.Sleep(500);
             }
         }
     }
 }
-
-
-
 
 //#include "mbed.h" 
 //#define OUT_MAX 2104 
