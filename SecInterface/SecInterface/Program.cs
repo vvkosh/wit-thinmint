@@ -13,6 +13,7 @@ namespace SecInterface
         [STAThread]
         static void Main()
         {
+            SerialIO.Launch();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

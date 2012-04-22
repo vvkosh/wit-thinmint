@@ -57,7 +57,10 @@ namespace ThinMint_Netduino
                 if (_state && !_prevState)
                 {
                     _rotations++;
-                    CalculateRPM(timer.ElapsedMilliseconds);
+                    if (timer.ElapsedMilliseconds > 0)
+                    {
+                        CalculateRPM(timer.ElapsedMilliseconds);
+                    }
                 }
                // Debug.Print("Photo: " + _state + " . . . RPM: " + _rpm);
                 _prevState = _state;
