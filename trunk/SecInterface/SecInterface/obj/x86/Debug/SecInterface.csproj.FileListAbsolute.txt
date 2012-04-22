@@ -1,0 +1,14 @@
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\obj\x86\Debug\SecInterface.Form1.resources
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\obj\x86\Debug\SecInterface.Properties.Resources.resources
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\bin\Debug\SecInterface.exe
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\bin\Debug\SecInterface.pdb
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\obj\x86\Debug\SecInterface.exe
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\obj\x86\Debug\SecInterface.pdb
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\bin\Debug\Interop.MSChart20Lib.dll
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\bin\Debug\AxInterop.MSChart20Lib.dll
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\obj\x86\Debug\Interop.MSChart20Lib.dll
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\obj\x86\Debug\AxInterop.MSChart20Lib.dll
+C:\Users\Jason\Desktop\Programming\SecInterface\SecInterface\obj\x86\Debug\SecInterface.csproj.ResolveComReference.cache
