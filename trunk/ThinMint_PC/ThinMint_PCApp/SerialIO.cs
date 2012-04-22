@@ -1,14 +1,9 @@
+﻿using System.IO.Ports;
 using System;
-using Microsoft.SPOT;
-using Microsoft.SPOT.Hardware;
-using SecretLabs.NETMF.Hardware;
-using SecretLabs.NETMF.Hardware.Netduino;
-using Microsoft.SPOT.Messaging;
-using System.Threading;
-using System.IO.Ports;
+using System.Diagnostics;
 using System.Text;
 
-namespace ThinMint_Netduino
+namespace ThinMint_PC
 {
     class SerialIO
     {
@@ -20,13 +15,25 @@ namespace ThinMint_Netduino
             set { SerialIO._serial = value; }
         }
 
-        public static void Launch()
+        public static void Initialize()
         {
-            // initialize the serial port for COM1 (using D0 & D1)
-            OpenSerialPort("COM1");
+            // provide some usage information
+            System.Console.WriteLine("enter some text and hit ENTER.");
+            System.Console.WriteLine("enter 'x' and hit ENTER to exit.");
+            System.Console.WriteLine();
 
-            // wait forever...
-            Thread.Sleep(Timeout.Infinite);
+            OpenSerialPort("COM6");
+
+            // this will hold each line entered
+            String line = string.Empty;
+
+            // as long as an x is not entered
+            while (line.ToLowerInvariant() != "x")
+            {
+                // read a single line from the console
+                line = System.Console.ReadLine();
+                SendData(line);
+            }
         }
 
         /// <summary>
@@ -35,10 +42,9 @@ namespace ThinMint_Netduino
         /// <param name="serial">ID of the serial port (COM1, COM2, COM3, etc.)</param>
         public static void OpenSerialPort(String serial)
         {
-            Serial = new SerialPort(serial, 9600, Parity.None, 8, StopBits.One);               // BC - Initialize the serial port.
+            Serial = new SerialPort(serial, 9600, Parity.None, 8, StopBits.One);            // BC - Initialize the serial port.
             Serial.Open();
-            Serial.DataReceived += new SerialDataReceivedEventHandler(serial_DataReceived);    // BC - Attach an event listener.
-            Serial.ErrorReceived += new SerialErrorReceivedEventHandler(serial_ErrorReceived); // BC - Attach an error listener.
+            Serial.DataReceived += new SerialDataReceivedEventHandler(serial_DataReceived); // BC - Attach an event listener.
         }
 
         /// <summary>
@@ -95,7 +101,7 @@ namespace ThinMint_Netduino
             }
             else if (header == 'M') // BC - Basic message.
             {
-                SendData(Encode(ValueType.MSG,message));
+                Console.Out.WriteLine(message);
             }
             return message;
         }
@@ -111,21 +117,14 @@ namespace ThinMint_Netduino
             Serial.Write(utf8Bytes, 0, utf8Bytes.Length);                   // BC - Send the bytes over the serial port.
         }
 
-        private static void serial_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
-        {
-            Debug.Print("Error received: [" + e.ToString() +"]");
-        }
-
         private static void serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            LED.On();
             System.Threading.Thread.Sleep(100);                         // BC - Pause a moment to let the buffer fill.
-            LED.Off();
             byte[] bytes = new byte[Serial.BytesToRead];                // BC - Initialize a byte array.
             Serial.Read(bytes, 0, bytes.Length);                        // BC - Read in the bytes.
             if (bytes.Length > 0)                                       // BC - Disregard empty messages.
             {
-                String line = new String(Encoding.UTF8.GetChars(bytes));// BC - Convert the bytes to a string.
+                String line = Encoding.UTF8.GetString(bytes);           // BC - Convert the bytes to a string.
                 Debug.Print("Received message: [" + line + "]");        // BC - Print the line through the debugger.
                 Parse(line);                                            // BC - Parse the line.
             }
