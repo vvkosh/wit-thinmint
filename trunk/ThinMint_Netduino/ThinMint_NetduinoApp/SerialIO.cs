@@ -25,8 +25,25 @@ namespace ThinMint_Netduino
             // initialize the serial port for COM1 (using D0 & D1)
             OpenSerialPort("COM1");
 
+            // BC - Start up the sending thread.
+            Thread sendingThread = new Thread(new ThreadStart(Send));
+            sendingThread.Start();
+
             // wait forever...
             Thread.Sleep(Timeout.Infinite);
+        }
+
+        public static void Send()
+        {
+            while (true)
+            {
+                Thread.Sleep(200);
+                SendData(Encode(ValueType.RPM,PhotoSensor.RPM));
+                Thread.Sleep(200);
+                SendData(Encode(ValueType.PSI,PressureSensor.PSI));
+                Thread.Sleep(200);
+                SendData(Encode(ValueType.SLOPE, Calculator.Slope));
+            }
         }
 
         /// <summary>
@@ -57,6 +74,10 @@ namespace ThinMint_Netduino
             else if (encoding == ValueType.RPM) // BC - RPM value.
             {
                 output = "R" + line;
+            }
+            else if (encoding == ValueType.SLOPE) // BC - Slope value.
+            {
+                output = "S" + line;
             }
             else                                // BC - Basic message.
             {
@@ -90,6 +111,10 @@ namespace ThinMint_Netduino
 
             }
             else if (header == 'R') // BC - RPM value.
+            {
+
+            }
+            else if (header == 'S') // BC - Slope value.
             {
 
             }
@@ -140,5 +165,6 @@ namespace ThinMint_Netduino
         MSG,
         RPM,
         PSI,
+        SLOPE,
     }
 }
