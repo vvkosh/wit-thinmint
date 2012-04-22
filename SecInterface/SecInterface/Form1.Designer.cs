@@ -109,6 +109,7 @@
             this.CurrentPSIOut.Name = "CurrentPSIOut";
             this.CurrentPSIOut.Size = new System.Drawing.Size(88, 33);
             this.CurrentPSIOut.TabIndex = 8;
+            this.CurrentPSIOut.Text = Program.PSI.ToString();
             // 
             // CurrentRPMOut
             // 
@@ -119,6 +120,7 @@
             this.CurrentRPMOut.Name = "CurrentRPMOut";
             this.CurrentRPMOut.Size = new System.Drawing.Size(88, 33);
             this.CurrentRPMOut.TabIndex = 9;
+            this.CurrentRPMOut.Text = Program.RPM.ToString();
             // 
             // ProsRPMOut
             // 

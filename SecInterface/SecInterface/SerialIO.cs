@@ -19,6 +19,7 @@ namespace SecInterface
         public static void Launch()
         {
             Thread serialThread = (new Thread(new ThreadStart(OpenSerialPort)));
+            serialThread.Start();
         }
 
         /// <summary>
@@ -76,17 +77,24 @@ namespace SecInterface
         {
             char header = line[0];
             String message = line.Substring(1);
-            if (header == 'P')      // BC - PSI value.
+            try
             {
-
+                if (header == 'P')      // BC - PSI value.
+                {
+                    Program.PSI = float.Parse(message);
+                }
+                else if (header == 'R') // BC - RPM value.
+                {
+                    Program.RPM = float.Parse(message);
+                }
+                else if (header == 'M') // BC - Basic message.
+                {
+                    Console.Out.WriteLine(message);
+                }
             }
-            else if (header == 'R') // BC - RPM value.
+            catch (Exception e)
             {
-
-            }
-            else if (header == 'M') // BC - Basic message.
-            {
-                Console.Out.WriteLine(message);
+                Debug.Print("ERROR: " + e.Message);
             }
             return message;
         }
