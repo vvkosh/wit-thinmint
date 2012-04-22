@@ -47,9 +47,10 @@ namespace ThinMint_Netduino
 
         public static void Launch()
         {
-            _input = new OutputPort(Pins.GPIO_PIN_D0, false);
-            _output = new OutputPort(Pins.GPIO_PIN_D1, false);
-            (new Thread(new ThreadStart(Listen))).Start();
+            _input = new OutputPort(Pins.GPIO_PIN_D12, false);
+            _output = new OutputPort(Pins.GPIO_PIN_D13, false);
+            Thread pressureThread = (new Thread(new ThreadStart(Listen)));
+            pressureThread.Start();
         }
 
         private static void Listen()
@@ -57,7 +58,7 @@ namespace ThinMint_Netduino
             while (true)
             {
                 CalculateVoltage();
-                Debug.Print("Pressure: " + PSI);
+              //  Debug.Print("Pressure: " + PSI);
             }
         }
 

@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Threading;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
@@ -15,9 +13,9 @@ namespace ThinMint_Netduino
     {
         public static void Main()
         {
-            //PhotoSensor.Launch();
-            //PressureSensor.Launch();
-            //UsbHidDeviceListener.Launch();
+            PhotoSensor.Launch();
+            PressureSensor.Launch();
+            SerialIO.Launch();
         }
     }
 }
