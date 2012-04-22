@@ -1,87 +1,54 @@
-﻿/* Custom USB HID Communication Device - Echo Test
- * Copyright (c) Secret Labs LLC. All Rights Reserved.
- * 
- * Licensed under the Apache 2.0 open source license
- */
+﻿using System.IO.Ports;
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
-namespace ThinMint_PCApp
+class Program
 {
-    class Program
+    static SerialPort serial;
+
+    static void Main(string[] args)
     {
-        const int CHARS_TO_SEND = 2048;
+        // provide some usage information
+        System.Console.WriteLine("enter some text and hit ENTER.");
+        System.Console.WriteLine("enter 'x' and hit ENTER to exit.");
+        System.Console.WriteLine();
 
-        static Stopwatch _stopwatch;
+        // initialize the serial port for COM6 (could be other port, depends on system)
+        serial = new SerialPort("COM6", 9600, Parity.None, 8, StopBits.One);
+        // open the serial-port, so we can send & receive data
+        serial.Open();
+        // add an event-handler for handling incoming data
+        serial.DataReceived += new SerialDataReceivedEventHandler(serial_DataReceived);
 
-        static void Main(string[] args)
+        // this will hold each line entered
+        string line = string.Empty;
+
+        // as long as an x is not entered
+        while (line.ToLowerInvariant() != "x")
         {
-            string hidPath = String.Empty;
+            // read a single line from the console
+            line = System.Console.ReadLine();
 
-            string[] hidPaths = PnP.GetPathNamesByDeviceInterfaceClassGuid(PnP.GetHidGuid());
-            foreach (string devicePathName in hidPaths)
-            {
-                try
-                {
-                    UInt16 vendorID;
-                    UInt16 productID;
-                    PnP.ExtractVendorAndProductIDFromDevicePathName(devicePathName, out vendorID, out productID);
-                    if (vendorID == 0x22b1 && productID == 0xfffe)
-                    {
-                        hidPath = devicePathName;
-                        break;
-                    }
-                }
-                catch { }
-            }
+            // convert the line to bytes
+            byte[] utf8Bytes = System.Text.Encoding.UTF8.GetBytes(line);
 
-            if (hidPath != string.Empty)
-            {
-                byte[] data = new byte[1];
-                byte[] dataCompare = new byte[1];
-                int bytesRead = 0;
-
-                int packetsPerProgressDot = (int)(CHARS_TO_SEND / 36);
-
-                for (int iAttempt = 0; iAttempt < 10000; iAttempt++)
-                //                for (int iAttempt = 0; iAttempt < 20; iAttempt++)
-                {
-                    Console.WriteLine("\r\n[" + iAttempt.ToString() + "] USB HID Device: " + hidPath);
-                    UsbHidHostLiteStream usbHostStream = new UsbHidHostLiteStream(hidPath);
-
-                    Console.WriteLine("Now testing: UsbHidDevice | speed test, before optimization");
-                    _stopwatch = Stopwatch.StartNew();
-                    for (int i = 0; i < CHARS_TO_SEND; i++)
-                    {
-                        data[0] = (byte)(i % 256);
-                        usbHostStream.Write(data, 0, 1);
-                        while (true)
-                        {
-                            bytesRead = usbHostStream.Read(dataCompare, 0, 1);
-                            if (dataCompare[0] == data[0])
-                                break;
-                        }
-                        if (i % packetsPerProgressDot == 0)
-                            Console.Write("."); // show progress every few bytes
-                    }
-
-                    long totalTimeMs = _stopwatch.ElapsedMilliseconds;
-                    Console.WriteLine("\r\nPACKETS PER SECOND = " + ((double)CHARS_TO_SEND / ((double)totalTimeMs / (double)1000)));
-                    Console.WriteLine("     MS PER PACKET = " + ((double)1000 / ((double)CHARS_TO_SEND / ((double)totalTimeMs / (double)1000))));
-                    usbHostStream.Dispose();
-                }
-            }
-            else
-            {
-                Console.WriteLine("Netduino running custom USB HID code was not found.\r\nTry unplugging and re-attaching USB connect to Netduino and using AC power adapter.\r\n");
-            }
-
-            Console.WriteLine("Finished. Press enter to exit.");
-            Console.ReadLine();
+            // send the bytes over the serial-port
+            serial.Write(utf8Bytes, 0, utf8Bytes.Length);
         }
+    }
+
+    static void serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
+    {
+        // wait a little for the buffer to fill
+        System.Threading.Thread.Sleep(100);
+
+        // create an array for the incoming bytes
+        byte[] bytes = new byte[serial.BytesToRead];
+        // read the bytes
+        serial.Read(bytes, 0, bytes.Length);
+        // convert the bytes into a string
+        string line = System.Text.Encoding.UTF8.GetString(bytes);
+
+        // write the received bytes, as a string, to the console
+        System.Console.WriteLine("echo: " + line);
+        System.Console.WriteLine();
     }
 }

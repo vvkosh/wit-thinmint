@@ -42,8 +42,9 @@ namespace ThinMint_Netduino
 
         public static void Launch()
         {
-            _input = new OutputPort(Pins.GPIO_PIN_D2, false);
-            (new Thread(new ThreadStart(Listen))).Start();
+            _input = new OutputPort(Pins.GPIO_PIN_D11, false);
+            Thread photoThread = (new Thread(new ThreadStart(Listen)));
+            photoThread.Start();
         }
 
         private static void Listen()
@@ -56,7 +57,7 @@ namespace ThinMint_Netduino
                     _rotations++;
                     CalculateRPM();
                 }
-                Debug.Print("Photo: " + _state + " . . . RPM: " + _rpm);
+               // Debug.Print("Photo: " + _state + " . . . RPM: " + _rpm);
                 _prevState = _state;
             }
         }
