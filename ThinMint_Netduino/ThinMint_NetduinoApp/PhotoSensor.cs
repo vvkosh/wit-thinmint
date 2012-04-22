@@ -27,17 +27,17 @@ namespace ThinMint_Netduino
         /// <summary>
         /// Get the state of the sensor.
         /// </summary>
-        public static Boolean GetState()
+        public static Boolean State
         {
-            return PhotoSensor._state;
+            get { return PhotoSensor._state; }
         }
 
         /// <summary>
         /// Get the RPM value.
         /// </summary>
-        public static float GetRPM()
+        public static float RPM
         {
-            return PhotoSensor._rpm;
+            get { return PhotoSensor._rpm; }
         }
 
         public static void Launch()
