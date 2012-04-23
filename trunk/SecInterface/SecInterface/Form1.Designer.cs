@@ -1,4 +1,6 @@
-﻿namespace SecInterface
+﻿using System.Windows.Forms;
+using System.Threading;
+namespace SecInterface
 {
     partial class Form1
     {
@@ -35,8 +37,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.CurrentPSIOut = new System.Windows.Forms.Label();
             this.CurrentRPMOut = new System.Windows.Forms.Label();
-            this.ProsRPMOut = new System.Windows.Forms.Label();
-            this.ProsPSIOut = new System.Windows.Forms.Label();
+            this.ProsRPMOut = new System.Windows.Forms.TextBox();
+            this.ProsPSIOut = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -109,7 +111,6 @@
             this.CurrentPSIOut.Name = "CurrentPSIOut";
             this.CurrentPSIOut.Size = new System.Drawing.Size(88, 33);
             this.CurrentPSIOut.TabIndex = 8;
-            this.CurrentPSIOut.Text = Program.PSI.ToString();
             // 
             // CurrentRPMOut
             // 
@@ -120,7 +121,6 @@
             this.CurrentRPMOut.Name = "CurrentRPMOut";
             this.CurrentRPMOut.Size = new System.Drawing.Size(88, 33);
             this.CurrentRPMOut.TabIndex = 9;
-            this.CurrentRPMOut.Text = Program.RPM.ToString();
             // 
             // ProsRPMOut
             // 
@@ -131,6 +131,7 @@
             this.ProsRPMOut.Name = "ProsRPMOut";
             this.ProsRPMOut.Size = new System.Drawing.Size(88, 33);
             this.ProsRPMOut.TabIndex = 11;
+            this.ProsRPMOut.TextChanged += new System.EventHandler(this.ProsRPMOut_TextChanged);
             // 
             // ProsPSIOut
             // 
@@ -141,6 +142,7 @@
             this.ProsPSIOut.Name = "ProsPSIOut";
             this.ProsPSIOut.Size = new System.Drawing.Size(88, 33);
             this.ProsPSIOut.TabIndex = 10;
+            this.ProsPSIOut.TextChanged += new System.EventHandler(this.ProsPSIOut_TextChanged);
             // 
             // textBox1
             // 
@@ -346,8 +348,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label CurrentPSIOut;
         private System.Windows.Forms.Label CurrentRPMOut;
-        private System.Windows.Forms.Label ProsRPMOut;
-        private System.Windows.Forms.Label ProsPSIOut;
+        private System.Windows.Forms.TextBox ProsRPMOut;
+        private System.Windows.Forms.TextBox ProsPSIOut;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label9;
@@ -366,6 +368,25 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label7;
+
+        public void SetTextboxText()
+        {
+                if (CurrentRPMOut.InvokeRequired)
+                {
+                    //This techniques is from answer by @sinperX1
+                    BeginInvoke((MethodInvoker)(() => { SetTextboxText(); }));
+                    return;
+                }
+                CurrentRPMOut.Text = Calculator.RPM.ToString();
+
+                if (CurrentPSIOut.InvokeRequired)
+                {
+                    //This techniques is from answer by @sinperX1
+                    BeginInvoke((MethodInvoker)(() => { SetTextboxText(); }));
+                    return;
+                }
+                CurrentPSIOut.Text = Calculator.PSI.ToString();
+        }
     }
 }
 

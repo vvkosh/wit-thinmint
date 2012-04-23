@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace SecInterface
 {
@@ -27,7 +28,20 @@ namespace SecInterface
             CurrentRPMOut.Text = textBox1.Text;
             ProsPSIOut.Text = textBox1.Text;
             ProsRPMOut.Text = textBox1.Text;
+        }
 
+        private void ProsPSIOut_TextChanged(object sender, EventArgs e)
+        {
+            ProsPSIOut.BackColor = Color.White;
+            ProsRPMOut.BackColor = Color.Yellow;
+            ProsRPMOut.Text = Calculator.GetProspectiveRPM(float.Parse(ProsPSIOut.Text)).ToString();
+        }
+
+        private void ProsRPMOut_TextChanged(object sender, EventArgs e)
+        {
+            ProsRPMOut.BackColor = Color.White;
+            ProsPSIOut.BackColor = Color.Yellow;
+            ProsPSIOut.Text = Calculator.GetProspectivePSI(float.Parse(ProsRPMOut.Text)).ToString();
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)

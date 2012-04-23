@@ -81,11 +81,11 @@ namespace SecInterface
             {
                 if (header == 'P')      // BC - PSI value.
                 {
-                    Program.PSI = float.Parse(message);
+                    Calculator.PSI = float.Parse(message);
                 }
                 else if (header == 'R') // BC - RPM value.
                 {
-                    Program.RPM = float.Parse(message);
+                    Calculator.RPM = float.Parse(message);
                 }
                 else if (header == 'M') // BC - Basic message.
                 {
